@@ -34,7 +34,7 @@
                                 </div>
                                 <div class="card-footer d-flex justify-content-between">
                                     <span class="text-muted">Added on {{ date('d/m/Y', strtotime($house->created_at)) }}</span>
-                                    <a href="/houses/show/{{$house->slug}}" class="btn btn-sm btn-dark">View House</a>
+                                    <a href="/houses/{{ $house->id }}" class="btn btn-sm btn-dark">View House</a>
                                 </div>
                             </div>
                         </div>                    

@@ -7,7 +7,7 @@
                 {{ session('slug') }}
             </div>
         @endif
-            <form method="POST" action="/houses/store" class="row g-3">
+            <form method="POST" action="/houses" class="row g-3">
                 @csrf
                 <div class="col-12">
                     <label for="name" class="form-label">Name</label>

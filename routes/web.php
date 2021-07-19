@@ -18,8 +18,8 @@ Route::middleware(['auth'])->group(function () {
 
     //Routes for houses
     Route::get('/houses/create', [HouseController::class, 'create']);
-    Route::post('/houses/store', [HouseController::class, 'store']);
-    Route::get('/houses/show/{slug}', [HouseController::class, 'show']);
+    Route::post('/houses', [HouseController::class, 'store']);
+    Route::get('/houses/{house}', [HouseController::class, 'show']);
     Route::post('/meter/store', [MeterController::class, 'store']);
     Route::post('/meter/reading/{id}', [MeterReadingController::class, 'store']);
 });

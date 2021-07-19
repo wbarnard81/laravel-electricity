@@ -15,7 +15,7 @@ class Meter extends Model
         'type',
     ];
 
-    public function meterReadings()
+    public function readings()
     {
         return $this->hasMany(MeterReading::class);
     }

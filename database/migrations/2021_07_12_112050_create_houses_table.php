@@ -17,7 +17,7 @@ class CreateHousesTable extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->string('name');
-            $table->string('complex');
+            $table->string('complex')->nullable();
             $table->string('address');
             $table->string('city');
             $table->string('province');

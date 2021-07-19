@@ -5,12 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\House;
 use App\Models\Meter;
 use App\Models\MeterReading;
-use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\Validator;
 
 class HouseController extends Controller
 {
@@ -21,51 +16,25 @@ class HouseController extends Controller
 
     public function store(Request $request)
     {
-        $user = Auth::user();
-        $slug = '';
-
-        if($request['complex']){
-            $slug = $user->id . "_" . Str::of($request['complex'])->slug('_');
-        } else {
-            $slug = $user->id . "_" . Str::of($request['address'])->slug('_');
-        }
-
-        $house = $request->validate([
-            'name' => 'required',
+        $data = $request->validate([
+            'name' => 'required|unique:houses,name',
             'complex' => 'nullable',
             'address' => 'required',
             'city' => 'required',
-            'province' => 'required',
+            'province' => 'required', 
             'postal_code' => 'required',
         ]);
 
-        $slugExist = DB::table('houses')->where('slug', $slug)->get()->toArray();
-
-        if($slugExist) {
-            return back()->with('slug', 'Complex name or address already exists.')->withInput();
-        }
-
-        $houseID = DB::table('houses')->insertGetId([
-            'user_id' => $user->id,
-            'slug' => $slug,
-            'name' => $house['name'],
-            'complex' => $house['complex'] ?? '',
-            'address' => $house['address'],
-            'city' => $house['city'],
-            'province' => $house['province'],
-            'postal_code' => $house['postal_code'],
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        $house = auth()->user()->houses()->create($data);
 
         Meter::create([
-            'house_id' => $houseID,
+            'house_id' => $house->id,
             'meter_name' => 'Electricity',
             'type' => 'electricity'
         ]);
 
         Meter::create([
-            'house_id' => $houseID,
+            'house_id' => $house->id,
             'meter_name' => 'Water',
             'type' => 'water'
         ]);
@@ -73,10 +42,9 @@ class HouseController extends Controller
         return redirect('dashboard')->with('successMsg', 'House has been added.');
     }
 
-    public function show($slug)
+    public function show(House $house)
     {
-        $house = House::where('slug', $slug)->with('meters')->with('meterReadings')->firstOrFail();
-
+        $house->load('meters.readings');
         $electricityData = [
             'date' => [],
             'units' => []
@@ -88,13 +56,12 @@ class HouseController extends Controller
         ];
 
         $electricityMeterId = '';
-        $waterMeterId = '';
 
         foreach($house->meters as $meter) {
             if(!$electricityMeterId){
                 $electricityMeterId = $meter['id'];
-                $eData = MeterReading::where('meter_id', $meter['id'])->get();
-                foreach($eData as $data){
+                
+                foreach($meter->readings as $data){
                     array_push($electricityData['date'], date("Y/m/d", strtotime($data['created_at'])));
                     array_push($electricityData['units'], intval($data['previous_reading']) - intval($data['reading']));
                 }
@@ -108,6 +75,6 @@ class HouseController extends Controller
             }
         }
 
-        return view('houses.show')->with('house', $house)->with('electricityData', $electricityData)->with('waterData', $waterData);
+        return view('houses.show', compact('house', 'electricityData', 'waterData'));
     }
 }

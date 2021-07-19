@@ -1,27 +1,26 @@
 <?php
 
-use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\HomeController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HouseController;
-use App\Http\Controllers\MeterController;
 use App\Http\Controllers\MeterReadingController;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        $houses = DB::table('houses')->where('user_id', auth()->user()->id)->get();
-        return view('dashboard', compact('houses', $houses));
-    })->name('dashboard');
+    //Route for Dashboard
+    Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
     //Routes for houses
     Route::get('/houses/create', [HouseController::class, 'create']);
     Route::post('/houses', [HouseController::class, 'store']);
     Route::get('/houses/{house}', [HouseController::class, 'show']);
-    Route::post('/meter/store', [MeterController::class, 'store']);
-    Route::post('/meter/reading/{id}', [MeterReadingController::class, 'store']);
+    
+    //Routes for readings
+    // Route::post('/meter/reading/{id}', [MeterReadingController::class, 'store']);
+    Route::post('/houses/{house}/meters/{meter}/readings/start_reading', [MeterReadingController::class, 'store_start_reading']);
+    Route::post('/houses/{house}/meters/{meter}/readings/units_purchased', [MeterReadingController::class, 'store_units_purchased']);
+    Route::post('/houses/{house}/meters/{meter}/readings/reading', [MeterReadingController::class, 'store_reading']);
 });
 
 

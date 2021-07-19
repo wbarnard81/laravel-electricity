@@ -2,47 +2,32 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\House;
+use App\Models\Meter;
 use App\Models\MeterReading;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 class MeterReadingController extends Controller
 {
-    public function store(Request $request, $id)
+    public function store_start_reading(House $house, Meter $meter, Request $request)
     {
-        $lastReading = MeterReading::where('meter_id', $id)->orderBy('created_at', 'desc')->first();
+        dd('store_start_reading');
 
-        $validatedData = $request->validate([
-            'meter_id'.$id => 'nullable|numeric',
-            'start_reading'.$id => 'nullable|numeric',
-            'previous_reading'.$id => 'nullable|numeric',
-            'units_purchased'.$id => 'nullable|numeric',
-            'rand_value'.$id => 'nullable|numeric',
-            'reading'.$id => 'nullable|numeric',
-        ]);
+        // MeterReading::create($data);
+    }
 
-        dd($validatedData);
+    public function store_units_purchased(House $house, Meter $meter, Request $request)
+    {
+        dd('store_units_purchased');
 
-        $data = [
-            'meter_id' => $id,
-            'start_reading' => $lastReading['start_reading'] > 0 ? $lastReading['start_reading'] : '0',
-            'previous_reading' => $lastReading['previous_reading'] > 0 ? $lastReading['previous_reading'] : '0',
-            'units_purchased' => $lastReading['units_purchased'] > 0 ? $lastReading['units_purchased'] : '0',
-            'rand_value' => $lastReading['rand_value'] > 0 ? $lastReading['rand_value'] : '0',
-            'reading' => $lastReading['reading'] > 0 ? $lastReading['reading'] : '0',
-        ];
+        // MeterReading::create($data);
+    }
 
-        Validator::make($data, [
-            'meter_id' => 'required|numeric',
-            'start_reading' => 'required|numeric',
-            'previous_reading' => 'required|numeric',
-            'units_purchased' => 'required|numeric',
-            'rand_value' => 'required|numeric',
-            'reading' => 'required|numeric',
-        ]);
+    public function store_reading(House $house, Meter $meter, Request $request)
+    {
+        dd('store_reading');
 
-        MeterReading::create($data);
-
-
+        // MeterReading::create($data);
     }
 }

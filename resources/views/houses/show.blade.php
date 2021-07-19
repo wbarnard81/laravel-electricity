@@ -44,7 +44,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-3">
-                                <form action="/meter/reading/" method="POST">
+                                <form action="/houses/{{$house->id}}/meters/{{$house->meters[0]->id}}/readings/start_reading" method="POST">
                                     @csrf
                                     <div class="input-group mb-3">
                                         <input type="text" name="start_reading" 
@@ -58,7 +58,7 @@
                                 </form>
                             </div>
                             <div class="col-6">
-                                <form action="/meter/reading/" method="POST">
+                                <form action="/houses/{{$house->id}}/meters/{{$house->meters[0]->id}}/readings/units_purchased" method="POST">
                                     @csrf
                                     <div class="input-group mb-3">
                                         <input type="text" name="units_purchased" 
@@ -77,7 +77,7 @@
                                 </form>
                             </div>
                             <div class="col-3">
-                                <form action="/meter/reading/" method="POST">
+                                <form action="/houses/{{$house->id}}/meters/{{$house->meters[0]->id}}/readings/reading" method="POST">
                                     @csrf
                                     <div class="input-group mb-3">
                                         <input type="text" name="reading" 

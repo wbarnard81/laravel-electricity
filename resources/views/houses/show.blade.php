@@ -39,58 +39,68 @@
             <div class="tab-pane fade show active" id="electricity" role="tabpanel" aria-labelledby="electricity-tab">
                 <div class="card">
                     <div class="card-header text-center">
-                        Electricity Usage for {{$house->name}}
+                        Electricity Usage for {{$house->name}}. Total purchased amout: R {{ $house->electricityValue($house->meters[0]->id) }}
                     </div>
                     <div class="card-body">
-                        <div class="row">
+                        <div class="row mb-3">
                             <div class="col-3">
                                 <form action="/houses/{{$house->id}}/meters/{{$house->meters[0]->id}}/readings/start_reading" method="POST">
                                     @csrf
-                                    <div class="input-group mb-3">
+                                    <div class="input-group">
                                         <input type="text" name="start_reading" 
                                         class="form-control @error('start_reading') {{'is-invalid'}} @enderror" 
                                         placeholder="Start Reading" aria-label="Start Reading" aria-describedby="button-addon2" value="{{ old('start_reading') }}">
-                                        @error('start_reading')
-                                            <div class="">{{ $message }}</div>
-                                        @enderror 
-                                        <button class="btn btn-outline-dark" type="submit">Add</button>
+                                        <button class="btn btn-outline-dark @if ($house->meters[0]->readings->count() > 0) {{'disabled'}} @endif" type="submit">Add</button>
                                     </div>
+                                    @error('start_reading')
+                                        <div class="text-danger"><small>{{ $message }}</small></div>
+                                    @enderror 
                                 </form>
                             </div>
                             <div class="col-6">
                                 <form action="/houses/{{$house->id}}/meters/{{$house->meters[0]->id}}/readings/units_purchased" method="POST">
                                     @csrf
-                                    <div class="input-group mb-3">
+                                    <div class="input-group">
                                         <input type="text" name="units_purchased" 
                                         class="form-control @error('units_purchased') {{'is-invalid'}} @enderror" 
                                         placeholder="Units Purchased" aria-label="Units Purchased" aria-describedby="button-addon2" value="{{ old('units_purchased') }}">
-                                        @error('units_purchased')
-                                            <div class="">{{ $message }}</div>
-                                        @enderror
                                         
                                         <input type="text" name="rand_value" class="form-control @error('rand_value') {{'is-invalid'}} @enderror" placeholder="Rand Value" aria-label="Rand Value" aria-describedby="button-addon2" value="{{ old('rand_value') }}">
-                                        @error('rand_value')
-                                            <div class="">{{ $message }}</div>
-                                        @enderror
                                         <button class="btn btn-outline-dark" type="submit">Add</button>
                                     </div>
+                                    @error('units_purchased')
+                                        <div class="text-danger"><small>{{ $message }}</small></div>
+                                    @enderror
+                                    @error('rand_value')
+                                    <div class="text-danger"><small>{{ $message }}</small></div>
+                                    @enderror
                                 </form>
                             </div>
                             <div class="col-3">
                                 <form action="/houses/{{$house->id}}/meters/{{$house->meters[0]->id}}/readings/reading" method="POST">
                                     @csrf
-                                    <div class="input-group mb-3">
+                                    <div class="input-group">
                                         <input type="text" name="reading" 
                                         class="form-control @error('reading') {{'is-invalid'}} @enderror" 
                                         placeholder="Meter Reading" aria-label="Meter Reading" aria-describedby="button-addon2" value="{{ old('reading') }}">
-                                        @error('reading')
-                                            <div class="">{{ $message }}</div>
-                                        @enderror
                                         <button class="btn btn-outline-dark" type="submit">Add</button>
                                     </div>
+                                    @error('reading')
+                                        <div class="text-danger"><small>{{ $message }}</small></div>
+                                    @enderror
                                 </form>
                             </div>
                         </div>
+
+                        <div class="row my-2">
+                            <div class="col">
+                                @include('includes.year-bar', ['years' => $years])
+                            </div>
+                            <div class="col">
+                                @include('includes.month-bar', ['months' => $months])
+                            </div>
+                        </div>
+
                         <div class="row align-items-start">
                             <div class="col">
                                 <canvas id="electricityCanvas"></canvas>
@@ -100,8 +110,8 @@
                                     <thead>
                                         <tr>
                                             <th>Date</th>
-                                            <th>Previous Meter Reading</th>
-                                            <th>Meter Reading</th>
+                                            <th>Previous Reading</th>
+                                            <th>Today's Reading</th>
                                             <th>Units Used</th>
                                             <th>Units Purchased</th>
                                         </tr>

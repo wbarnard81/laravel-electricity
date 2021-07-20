@@ -11,7 +11,7 @@ class HomeController extends Controller
 
     public function dashboard()
     {
-        $houses = auth()->user()->houses();
+        $houses = auth()->user()->houses()->get();
 
         return view('dashboard', compact('houses', $houses));
     }   

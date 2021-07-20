@@ -12,22 +12,46 @@ class MeterReadingController extends Controller
 {
     public function store_start_reading(House $house, Meter $meter, Request $request)
     {
-        dd('store_start_reading');
+        $data = $request->validate([
+            'start_reading' => 'required|numeric'
+        ]);
 
-        // MeterReading::create($data);
+        $data['meter_id'] = $meter->id;
+        $data['reading'] = 0;
+        $data['previous_reading'] = $request['previous_reading'] ?? 0;
+        $data['units_purchased'] = $request['units_purchased'] ?? 0;
+        $data['rand_value'] = $request['rand_value'] ?? 0;
+
+        MeterReading::create($data);
+
+        return redirect('/houses/' . $house->id);
     }
 
     public function store_units_purchased(House $house, Meter $meter, Request $request)
     {
-        dd('store_units_purchased');
+        $data = $request->validate([
+            'units_purchased' => 'required|numeric',
+            'rand_value' => 'required|numeric'
+        ]);
 
-        // MeterReading::create($data);
+        dd($data);
     }
 
+    
     public function store_reading(House $house, Meter $meter, Request $request)
     {
-        dd('store_reading');
+        $lastRecord = MeterReading::latest()->first();
 
-        // MeterReading::create($data);
+        $data = $request->validate([
+            'reading' => 'required|numeric'
+        ]);
+
+        $data['meter_id'] = $meter->id;
+        $data['start_reading'] = $request['start_reading'] ?? 0;
+        $data['previous_reading'] = $lastRecord->previous_reading;
+        $data['units_purchased'] = $request['units_purchased'] ?? 0;
+        $data['rand_value'] = $request['rand_value'] ?? 0;
+
+        MeterReading::create($data);
     }
 }

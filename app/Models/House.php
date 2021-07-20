@@ -29,4 +29,9 @@ class House extends Model
     {
         return $this->hasManyThrough(MeterReading::class, Meter::class);
     }
+
+    public function electricityValue($meterId)
+    {
+        return array_sum(MeterReading::where('meter_id', $meterId)->pluck('rand_value')->toArray());
+    }
 }

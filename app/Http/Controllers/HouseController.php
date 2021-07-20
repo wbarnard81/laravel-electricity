@@ -42,9 +42,29 @@ class HouseController extends Controller
         return redirect('dashboard')->with('successMsg', 'House has been added.');
     }
 
-    public function show(House $house)
+    public function show(House $house, Request $request)
     {
-        $house->load('meters.readings');
+        $timeFrame = MeterReading::pluck('created_at');
+        $years = [];
+        $months = [];
+        foreach ($timeFrame as $date) {
+            if(!in_array($date->year, $years, true)){
+                array_push($years, $date->year);
+            }
+            if(!in_array($date->month, $months, true)){
+                array_push($months, $date->month);
+            }
+        };
+
+        $year = $request->has('year') ? $request['year'] : now()->year;
+        $month = $request->has('month') ? $request['month'] : now()->month;
+
+        $house->load(['meters.readings' => function ($query) use ($year, $month) {
+            $query->orderBy('created_at', 'desc')->whereYear('created_at', '=', $year)
+            ->whereMonth('created_at', '=', $month)
+            ->get();
+        }]);
+
         $electricityData = [
             'date' => [],
             'units' => []
@@ -75,6 +95,6 @@ class HouseController extends Controller
             }
         }
 
-        return view('houses.show', compact('house', 'electricityData', 'waterData'));
+        return view('houses.show', compact('house', 'electricityData', 'waterData', 'years', 'months'));
     }
 }

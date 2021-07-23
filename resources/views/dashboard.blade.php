@@ -22,7 +22,7 @@
             @if ($houses)
                 <div class="d-flex justify-content-around flex-wrap">
                     @foreach ($houses as $house)
-                        <div class="col-3 m-4">
+                        <div class="col-sm-3 m-4">
                             <div class="card h-100">
                                 <div class="card-body">
                                     <h5 class="card-title">{{ $house->name }}</h5>

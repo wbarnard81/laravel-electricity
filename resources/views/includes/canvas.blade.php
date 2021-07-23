@@ -35,7 +35,8 @@
             legend: {
             display: true,
             position: 'bottom',
-
+            responsive: true,
+            maintainAspectRatio: false,
             labels: {
                 fontColor: '#71748d',
                 fontFamily: 'Circular Std Book',

@@ -3,7 +3,7 @@
         <a class="navbar-brand" href="/">
             <img src="/images/logo.png" alt="logo" style="height: 50px;">
         </a>
-        <ul class="navbar-nav mb-2 mb-lg-0 flex-row">
+        <ul class="navbar-nav mb-2 mb-lg-0 flex-row align-self- justify-content-end">
             @guest
                 <li class="nav-item">
                     <a class="nav-link me-4" aria-current="page" href="/login">Login</a>
@@ -25,6 +25,6 @@
                     <a class="nav-link" href="/dashboard">Dashboard</a>
                 </li>
             @endguest
-      </ul>
-    </div>
+        </ul>
+  </div>
 </nav>

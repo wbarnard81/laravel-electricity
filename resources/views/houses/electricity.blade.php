@@ -1,7 +1,7 @@
 @include('includes.header')
 @include('components.navbar')
-    <section class="p-5">
-        <div class="d-flex justify-content-center">
+    <section class="p-sm-5 container-fluid">
+        <div class="d-sm-flex justify-content-center">
             <h2 class="text-center p-4 m-0">{{ $house->name }}</h2>
             <div class="flex-column">
                 <div>
@@ -32,8 +32,8 @@
                     Electricity Usage for {{$house->name}}. Total purchased amout: R {{ $house->electricityValue($house->meters[0]->id) }}
                 </div>
                 <div class="card-body">
-                    <div class="row mb-3">
-                        <div class="col-3">
+                    <div class="row g-2">
+                        <div class="col-sm-3">
                             <form action="/houses/{{$house->id}}/meters/{{$house->meters[0]->id}}/readings/start_reading" method="POST">
                                 @csrf
                                 <div class="input-group">
@@ -48,7 +48,7 @@
                                 @enderror 
                             </form>
                         </div>
-                        <div class="col-6">
+                        <div class="col-sm-6 mx-sm-2">
                             <form action="/houses/{{$house->id}}/meters/{{$house->meters[0]->id}}/readings/units_purchased" method="POST">
                                 @csrf
                                 <div class="input-group">
@@ -63,11 +63,11 @@
                                     <div class="text-danger"><small>{{ $message }}</small></div>
                                 @enderror
                                 @error('rand_value')
-                                <div class="text-danger"><small>{{ $message }}</small></div>
+                                    <div class="text-danger"><small>{{ $message }}</small></div>
                                 @enderror
                             </form>
                         </div>
-                        <div class="col-3">
+                        <div class="col-sm-3">
                             <form action="/houses/{{$house->id}}/meters/{{$house->meters[0]->id}}/readings/reading" method="POST">
                                 @csrf
                                 <div class="input-group">
@@ -83,50 +83,68 @@
                         </div>
                     </div>
 
-                    <div class="row my-2">
+                    <div class="row g-2 mt-2">
                         <div class="col">
-                            @include('includes.year-bar', ['years' => $years])
+                            <ul class="nav justify-content-center border">
+                            @forelse ($years as $year)
+                                <li class="nav-item">
+                                    <a class="btn btn-sm btn-outline-secondary" aria-current="page" href="/houses/{{$house->id}}/{{$house->meters[0]->type}}?year={{$year}}">{{ $year }}</a>
+                                </li>
+                            @empty
+                                <li></li>
+                            @endforelse
+                            </ul>
                         </div>
                         <div class="col">
-                            @include('includes.month-bar', ['months' => $months])
+                            <ul class="nav justify-content-center border">
+                            @forelse ($months as $month)
+                                <li class="nav-item">
+                                    <a class="btn btn-sm btn-outline-secondary" aria-current="page" href="/houses/{{$house->id}}/{{$house->meters[0]->type}}?month={{$month}}">{{ $month }}</a>
+                                </li>
+                            @empty
+                                <li></li>
+                            @endforelse
+                            </ul>
                         </div>
                     </div>
 
-                    <div class="row align-items-start">
-                        <div class="col">
-                            <canvas id="canvas"></canvas>
-                        </div>
-                        <div class="col">
-                            <table id="meterTable" class="table is-striped is-bordered">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Previous Reading</th>
-                                        <th>Today's Reading</th>
-                                        <th>Units Used</th>
-                                        <th>Units Purchased</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="meterTableBody">
-                                    @foreach ($house->meters as $meter)
-                                        @if ($meter->type == "electricity")
-                                            @forelse ($meter->readings as $reading)
-                                                <tr>
-                                                    <td>{{ date("Y/m/d", strtotime($reading['created_at'])) }}</td>
-                                                    <td>{{ $reading['previous_reading'] }}</td>
-                                                    <td>{{ $reading['reading'] }}</td>
-                                                    <td>{{ $reading['units_used'] }}</td>
-                                                    <td>{{ $reading['units_purchased'] }}</td>
-                                                </tr>
-                                            @empty
-                                                <tr>
-                                                    <td colspan="5">No data to show.</td>
-                                                </tr>
-                                            @endforelse
-                                        @endif
-                                    @endforeach
-                                </tbody>
-                            </table>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-sm p-0" style="position: relative;">
+                                <canvas id="canvas"></canvas>
+                            </div>
+                            <div class="col-sm p-0 table-responsive-sm">
+                                <table id="meterTable" class="table is-striped is-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Previous Reading</th>
+                                            <th>Today's Reading</th>
+                                            <th>Units Used</th>
+                                            <th>Units Purchased</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="meterTableBody">
+                                        @foreach ($house->meters as $meter)
+                                            @if ($meter->type == "electricity")
+                                                @forelse ($meter->readings as $reading)
+                                                    <tr>
+                                                        <td>{{ date("Y/m/d", strtotime($reading['created_at'])) }}</td>
+                                                        <td>{{ $reading['previous_reading'] }}</td>
+                                                        <td>{{ $reading['reading'] }}</td>
+                                                        <td>{{ $reading['units_used'] }}</td>
+                                                        <td>{{ $reading['units_purchased'] }}</td>
+                                                    </tr>
+                                                @empty
+                                                    <tr>
+                                                        <td colspan="5">No data to show.</td>
+                                                    </tr>
+                                                @endforelse
+                                            @endif
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>

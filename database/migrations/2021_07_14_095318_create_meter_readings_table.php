@@ -21,6 +21,7 @@ class CreateMeterReadingsTable extends Migration
             $table->string('units_purchased')->default(0);
             $table->string('rand_value')->default(0);
             $table->string('reading')->default(0);
+            $table->string('units_used')->default(0);
             $table->timestamps();
         });
     }

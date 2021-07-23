@@ -16,6 +16,12 @@ class MeterReading extends Model
         'units_purchased',
         'rand_value',
         'reading',
+        'units_used',
     ];
+
+    public function meter()
+    {
+        return $this->belongsTo(Meter::class);
+    }
 
 }

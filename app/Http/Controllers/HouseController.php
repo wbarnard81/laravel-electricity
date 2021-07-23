@@ -42,9 +42,9 @@ class HouseController extends Controller
         return redirect('dashboard')->with('successMsg', 'House has been added.');
     }
 
-    public function show(House $house, Request $request)
+    public function showElectricity(House $house, Request $request)
     {
-        $timeFrame = MeterReading::pluck('created_at');
+        $timeFrame = MeterReading::where('meter_id', $house->meters[0]->id)->pluck('created_at');
         $years = [];
         $months = [];
         foreach ($timeFrame as $date) {
@@ -65,36 +65,56 @@ class HouseController extends Controller
             ->get();
         }]);
 
-        $electricityData = [
+        $chartData = [
             'date' => [],
             'units' => []
         ];
 
-        $waterData = [
-            'date' => [],
-            'units' => []
-        ];
-
-        $electricityMeterId = '';
-
-        foreach($house->meters as $meter) {
-            if(!$electricityMeterId){
-                $electricityMeterId = $meter['id'];
-                
-                foreach($meter->readings as $data){
-                    array_push($electricityData['date'], date("Y/m/d", strtotime($data['created_at'])));
-                    array_push($electricityData['units'], intval($data['previous_reading']) - intval($data['reading']));
-                }
-            } else {
-                $eData = MeterReading::where('meter_id', $meter['id'])->get();
-            
-                foreach($eData as $data){
-                    array_push($waterData['date'], date("Y/m/d", strtotime($data['created_at'])));
-                    array_push($waterData['units'], intval($data['previous_reading']) - intval($data['reading']));
-                }
+        foreach($house->meters[0]->readings as $data){
+            if ($data['units_used'] > 0){
+                array_push($chartData['date'], date("Y/m/d", strtotime($data['created_at'])));
+                array_push($chartData['units'], $data['units_used']);
             }
         }
 
-        return view('houses.show', compact('house', 'electricityData', 'waterData', 'years', 'months'));
+        return view('houses.electricity', compact('house', 'chartData', 'years', 'months'));
+    }
+
+    public function showWater(House $house, Request $request)
+    {
+        $timeFrame = MeterReading::where('meter_id', $house->meters[1]->id)->pluck('created_at');
+        $years = [];
+        $months = [];
+        foreach ($timeFrame as $date) {
+            if(!in_array($date->year, $years, true)){
+                array_push($years, $date->year);
+            }
+            if(!in_array($date->month, $months, true)){
+                array_push($months, $date->month);
+            }
+        };
+
+        $year = $request->has('year') ? $request['year'] : now()->year;
+        $month = $request->has('month') ? $request['month'] : now()->month;
+
+        $house->load(['meters.readings' => function ($query) use ($year, $month) {
+            $query->orderBy('created_at', 'desc')->whereYear('created_at', '=', $year)
+            ->whereMonth('created_at', '=', $month)
+            ->get();
+        }]);
+
+        $chartData = [
+            'date' => [],
+            'units' => []
+        ];
+
+        foreach($house->meters[1]->readings as $data){
+            if ($data['units_used'] > 0){
+                array_push($chartData['date'], date("Y/m/d", strtotime($data['created_at'])));
+                array_push($chartData['units'], $data['units_used']);
+            }
+        }
+
+        return view('houses.water', compact('house', 'chartData', 'years', 'months'));
     }
 }

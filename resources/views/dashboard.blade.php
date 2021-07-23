@@ -33,8 +33,8 @@
                                     <p class="card-text">{{ $house->postal_code }}</p>
                                 </div>
                                 <div class="card-footer d-flex justify-content-between">
-                                    <span class="text-muted">Added on {{ date('d/m/Y', strtotime($house->created_at)) }}</span>
-                                    <a href="/houses/{{ $house->id }}" class="btn btn-sm btn-dark">View House</a>
+                                    <a href="/houses/{{ $house->id }}/water" class="btn btn-sm btn-primary">Water Readings</a>
+                                    <a href="/houses/{{ $house->id }}/electricity" class="btn btn-sm btn-warning">Electricity Readings</a>
                                 </div>
                             </div>
                         </div>                    

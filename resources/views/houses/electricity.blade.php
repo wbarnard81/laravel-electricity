@@ -2,7 +2,12 @@
 @include('components.navbar')
     <section class="p-sm-5 container-fluid">
         <div class="d-sm-flex justify-content-center">
-            <h2 class="text-center p-4 m-0">{{ $house->name }}</h2>
+            <div>
+                <h2 class="text-center p-4 m-0">{{ $house->name }}</h2>
+                <div>
+                    <a href="/houses/{{ $house->id }}/water" class="btn btn-sm btn-primary">Water Readings</a>
+                </div>
+            </div>
             <div class="flex-column">
                 <div>
                     <small>{{ $house->complex }}</small>
@@ -53,11 +58,14 @@
                                 @csrf
                                 <div class="input-group">
                                     <input type="text" name="units_purchased" 
-                                    class="form-control @error('units_purchased') {{'is-invalid'}} @enderror" 
+                                    class="form-control @error('units_purchased') {{'is-invalid'}} @enderror"
+                                    {{ $house->meters[0]->readings->count() == 0 ? 'readonly' : '' }} 
                                     placeholder="Units Purchased" aria-label="Units Purchased" aria-describedby="button-addon2" value="{{ old('units_purchased') }}">
                                     
-                                    <input type="text" name="rand_value" class="form-control @error('rand_value') {{'is-invalid'}} @enderror" placeholder="Rand Value" aria-label="Rand Value" aria-describedby="button-addon2" value="{{ old('rand_value') }}">
-                                    <button class="btn btn-outline-dark" type="submit">Add</button>
+                                    <input type="text" name="rand_value" class="form-control @error('rand_value') {{'is-invalid'}} @enderror" 
+                                    {{ $house->meters[0]->readings->count() == 0 ? 'readonly' : '' }} 
+                                    placeholder="Rand Value" aria-label="Rand Value" aria-describedby="button-addon2" value="{{ old('rand_value') }}">
+                                    <button class="btn btn-outline-dark @if ($house->meters[0]->readings->count() == 0) {{'disabled'}} @endif" type="submit">Add</button>
                                 </div>
                                 @error('units_purchased')
                                     <div class="text-danger"><small>{{ $message }}</small></div>
@@ -72,9 +80,10 @@
                                 @csrf
                                 <div class="input-group">
                                     <input type="text" name="reading" 
-                                    class="form-control @error('reading') {{'is-invalid'}} @enderror" 
+                                    class="form-control @error('reading') {{'is-invalid'}} @enderror"
+                                    {{ $house->meters[0]->readings->count() == 0 ? 'readonly' : '' }} 
                                     placeholder="Meter Reading" aria-label="Meter Reading" aria-describedby="button-addon2" value="{{ old('reading') }}">
-                                    <button class="btn btn-outline-dark" type="submit">Add</button>
+                                    <button class="btn btn-outline-dark @if ($house->meters[0]->readings->count() == 0) {{'disabled'}} @endif" type="submit">Add</button>
                                 </div>
                                 @error('reading')
                                     <div class="text-danger"><small>{{ $message }}</small></div>

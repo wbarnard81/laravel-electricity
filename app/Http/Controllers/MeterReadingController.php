@@ -6,7 +6,6 @@ use App\Models\House;
 use App\Models\Meter;
 use App\Models\MeterReading;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 
 class MeterReadingController extends Controller
 {
@@ -24,9 +23,9 @@ class MeterReadingController extends Controller
         $data['rand_value'] = 0;
         $data['units_used'] = 0;
 
-        MeterReading::create($data);
+        $created = MeterReading::create($data);
 
-        return redirect('/houses/' . $house->id . '/' . $lastRecord->meter->type);
+        return redirect('/houses/' . $house->id . '/' . $created->meter->type);
     }
 
     public function store_units_purchased(House $house, Meter $meter, Request $request)

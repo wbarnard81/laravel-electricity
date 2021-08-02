@@ -9,9 +9,14 @@ use Illuminate\Http\Request;
 
 class MeterReadingController extends Controller
 {
+    public function get_all_readings()
+    {
+        $allReadings = [];
+        dd('sdfsdf');
+    }
+
     public function store_start_reading(House $house, Meter $meter, Request $request)
     {
-        $lastRecord = MeterReading::where('meter_id', $meter->id)->latest()->first();
         $data = $request->validate([
             'start_reading' => 'required|numeric'
         ]);

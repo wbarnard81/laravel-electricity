@@ -34,4 +34,9 @@ class House extends Model
     {
         return array_sum(MeterReading::where('meter_id', $meterId)->pluck('rand_value')->toArray());
     }
+
+    public function waterValue($meterId)
+    {
+        return array_sum(MeterReading::where('meter_id', $meterId)->pluck('rand_value')->toArray());
+    }
 }

@@ -1,8 +1,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.4.1/chart.min.js"></script>
 <script type="text/javascript">
     let ctx = document.getElementById("canvas").getContext('2d');
-    ctx.width  = 800;
-    ctx.height = 600;
     let myChart1 = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -36,7 +34,7 @@
             display: true,
             position: 'bottom',
             responsive: true,
-            maintainAspectRatio: false,
+            maintainAspectRatio: true,
             labels: {
                 fontColor: '#71748d',
                 fontFamily: 'Circular Std Book',

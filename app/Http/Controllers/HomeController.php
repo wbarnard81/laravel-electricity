@@ -13,6 +13,12 @@ class HomeController extends Controller
     {
         $houses = auth()->user()->houses()->get();
 
-        return view('dashboard', compact('houses', $houses));
+        // dd($houses[0]);
+
+        if(count($houses) == 0) {
+            return view('houses.create');
+        } else {
+            return view('dashboard', ['houses' => $houses]);
+        }
     }   
 }

@@ -1,0 +1,20 @@
+version: '3.1'
+
+services:
+  db:
+    image: mysql
+    restart: always
+    ports:
+      - 33061:3306
+    volumes:
+      - /meterdb:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: notSecureChangeMe@
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8083:80
+    environment:
+      - PMA_ARBITRARY=1

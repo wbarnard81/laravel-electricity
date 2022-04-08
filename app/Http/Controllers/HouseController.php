@@ -47,6 +47,9 @@ class HouseController extends Controller
         $timeFrame = MeterReading::where('meter_id', $house->meters[0]->id)->pluck('created_at');
         $years = [];
         $months = [];
+        $currentYear = now()->year;
+        $currentMonth = now()->month;
+
         foreach ($timeFrame as $date) {
             if(!in_array($date->year, $years, true)){
                 array_push($years, $date->year);
@@ -56,8 +59,10 @@ class HouseController extends Controller
             }
         };
 
-        $year = $request->has('year') ? $request['year'] : now()->year;
-        $month = $request->has('month') ? $request['month'] : now()->month;
+        // dd($request);
+
+        $year = $request->has('year') ? $request['year'] : $currentYear;
+        $month = $request->has('month') ? $request['month'] : $currentMonth;
 
         $house->load(['meters.readings' => function ($query) use ($year, $month) {
             $query->orderBy('created_at', 'desc')->whereYear('created_at', '=', $year)
@@ -77,7 +82,7 @@ class HouseController extends Controller
             }
         }
 
-        return view('houses.electricity', compact('house', 'chartData', 'years', 'months'));
+        return view('houses.electricity', compact('house', 'chartData', 'years', 'months', 'year', 'month'));
     }
 
     public function showWater(House $house, Request $request)

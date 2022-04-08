@@ -7,7 +7,7 @@ services:
     ports:
       - 33061:3306
     volumes:
-      - /meterdb:/var/lib/mysql
+      - mysql-data:/var/lib/mysql
     environment:
       MYSQL_ROOT_PASSWORD: notSecureChangeMe@
 
@@ -18,3 +18,6 @@ services:
       - 8083:80
     environment:
       - PMA_ARBITRARY=1
+
+volumes:
+  mysql-data:

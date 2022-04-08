@@ -84,7 +84,7 @@
                 <ul class="nav justify-content-center border">
                   @forelse ($years as $year)
                   <li class="nav-item">
-                    <a class="btn btn-sm btn-outline-secondary" aria-current="page" href="/houses/{{$house->id}}/{{$house->meters[0]->type}}?year={{$year}}">{{ $year }}</a>
+                    <a class="btn btn-sm btn-outline-secondary" aria-current="page" href="/houses/{{$house->id}}/{{$house->meters[0]->type}}?year={{$year}}&month={{$month}}">{{ $year }}</a>
                   </li>
                   @empty
                   <li></li>
@@ -95,7 +95,7 @@
                 <ul class="nav justify-content-center border">
                   @forelse ($months as $month)
                   <li class="nav-item">
-                    <a class="btn btn-sm btn-outline-secondary" aria-current="page" href="/houses/{{$house->id}}/{{$house->meters[0]->type}}?month={{$month}}">{{ $month }}</a>
+                    <a class="btn btn-sm btn-outline-secondary" aria-current="page" href="/houses/{{$house->id}}/{{$house->meters[0]->type}}?year={{$year}}&month={{$month}}">{{ $month }}</a>
                   </li>
                   @empty
                   <li></li>
